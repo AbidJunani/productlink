@@ -51,7 +51,7 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title: product.title,
       description: product.description,
-      url: `https://yourdomain.com/products/${params.slug}`,
+      url: `https://productlink-pi.vercel.app/products/${params.slug}`,
       siteName: "My Store",
       images: [
         {

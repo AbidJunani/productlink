@@ -25,7 +25,7 @@ async function fetchProduct(slug) {
 
 export async function generateMetadata({ params }) {
   const product = await fetchProduct(params.slug);
-  const baseUrl = "https://your-deployment-url.vercel.app";
+  const baseUrl = "https://productlink-pi.vercel.app";
 
   if (!product) {
     return {

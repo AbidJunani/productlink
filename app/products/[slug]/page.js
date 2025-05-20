@@ -90,7 +90,8 @@ export default async function ProductPage({ params }) {
           Product not found
         </h1>
         <p className="text-gray-600 mt-2">
-          The product you're looking for doesn't exist or the ID is invalid.
+          The product you&apos;re looking for doesn&apos;t exist or the ID is
+          invalid.
         </p>
       </div>
     );

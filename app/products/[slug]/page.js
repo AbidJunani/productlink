@@ -2,9 +2,17 @@
 
 async function fetchProduct(slug) {
   try {
-    const res = await fetch(`https://fakestoreapi.com/products/${slug}`);
+    const id = Number(slug);
+    if (isNaN(id)) return null;
 
-    if (!res.ok) {
+    const res = await fetch(`https://fakestoreapi.com/products/${id}`, {
+      next: { revalidate: 60 }, // Optional: revalidate every 60s
+    });
+
+    if (!res.ok) return null;
+
+    const contentType = res.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
       return null;
     }
 
@@ -61,7 +69,7 @@ export async function generateMetadata({ params }) {
           alt: product.title,
         },
       ],
-      type: "product",
+      type: "article", // ✅ Changed from "product" to "article"
     },
     twitter: {
       card: "summary_large_image",
@@ -76,7 +84,16 @@ export default async function ProductPage({ params }) {
   const product = await fetchProduct(params.slug);
 
   if (!product) {
-    return <h1 className="p-6 text-xl font-semibold">Product not found</h1>;
+    return (
+      <div className="p-6">
+        <h1 className="text-2xl font-semibold text-red-600">
+          Product not found
+        </h1>
+        <p className="text-gray-600 mt-2">
+          The product you're looking for doesn't exist or the ID is invalid.
+        </p>
+      </div>
+    );
   }
 
   return (

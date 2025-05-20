@@ -1,9 +1,12 @@
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 async function fetchProducts() {
-  const res = await fetch("https://fakestoreapi.com/products");
+  const res = await fetch("https://dummyjson.com/products");
   if (!res.ok) throw new Error("Failed to fetch products");
-  return res.json();
+  const data = await res.json();
+  return data.products;
 }
 
 export default async function ProductsPage() {
@@ -16,7 +19,7 @@ export default async function ProductsPage() {
         {products.map((product) => (
           <li key={product.id} className="flex gap-4 items-center">
             <img
-              src={product.image}
+              src={product.thumbnail}
               alt={product.title}
               className="w-16 h-16 object-contain"
             />

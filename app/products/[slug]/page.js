@@ -1,12 +1,12 @@
-export const dynamic = "force-dynamic"; // Ensures fresh data for social media bots
+export const dynamic = "force-dynamic";
 
 async function fetchProduct(slug) {
   try {
     const id = Number(slug);
     if (isNaN(id)) return null;
 
-    const res = await fetch(`https://fakestoreapi.com/products/${id}`, {
-      next: { revalidate: 60 }, // Revalidate every 60 seconds
+    const res = await fetch(`https://dummyjson.com/products/${id}`, {
+      next: { revalidate: 60 },
     });
 
     if (!res.ok) return null;
@@ -25,7 +25,7 @@ async function fetchProduct(slug) {
 
 export async function generateMetadata({ params }) {
   const product = await fetchProduct(params.slug);
-  const baseUrl = "https://productlink-pi.vercel.app";
+  const baseUrl = "https://your-deployment-url.vercel.app";
 
   if (!product) {
     return {
@@ -57,7 +57,7 @@ export async function generateMetadata({ params }) {
   return {
     title: `${product.title} | My Store`,
     description: product.description,
-    keywords: [product.category, ...product.title.split(" ")],
+    keywords: [product.category, product.brand, ...product.title.split(" ")],
     alternates: {
       canonical: `${baseUrl}/products/${params.slug}`,
     },
@@ -68,7 +68,7 @@ export async function generateMetadata({ params }) {
       siteName: "My Store",
       images: [
         {
-          url: product.image,
+          url: product.thumbnail,
           width: 1200,
           height: 630,
           alt: product.title,
@@ -81,13 +81,13 @@ export async function generateMetadata({ params }) {
       card: "summary_large_image",
       title: `${product.title} | My Store`,
       description: product.description,
-      images: [product.image],
+      images: [product.thumbnail],
     },
     other: {
       "og:availability": "instock",
       "og:price:amount": product.price.toString(),
       "og:price:currency": "USD",
-      "product:brand": "My Store Brand",
+      "product:brand": product.brand,
       "product:retailer_item_id": params.slug,
       "product:category": product.category,
     },
@@ -125,7 +125,7 @@ export default async function ProductPage({ params }) {
         <div className="md:flex">
           <div className="md:w-1/2 p-6">
             <img
-              src={product.image}
+              src={product.thumbnail}
               alt={product.title}
               className="w-full h-auto object-contain max-h-96 mx-auto"
             />
@@ -149,7 +149,6 @@ export default async function ProductPage({ params }) {
                 className="w-4 h-4 mr-1"
                 fill="currentColor"
                 viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
               >
                 <path
                   fillRule="evenodd"

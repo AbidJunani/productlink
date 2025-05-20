@@ -1,4 +1,4 @@
-// app/products/[slug]/page.js
+export const dynamic = "force-dynamic"; // Important for OpenGraph bots
 
 async function fetchProduct(slug) {
   try {
@@ -6,7 +6,7 @@ async function fetchProduct(slug) {
     if (isNaN(id)) return null;
 
     const res = await fetch(`https://fakestoreapi.com/products/${id}`, {
-      next: { revalidate: 60 }, // Optional: revalidate every 60s
+      next: { revalidate: 60 }, // Optional revalidation
     });
 
     if (!res.ok) return null;
@@ -24,7 +24,6 @@ async function fetchProduct(slug) {
   }
 }
 
-// Dynamic metadata for SEO and link previews
 export async function generateMetadata({ params }) {
   const product = await fetchProduct(params.slug);
 
@@ -69,7 +68,7 @@ export async function generateMetadata({ params }) {
           alt: product.title,
         },
       ],
-      type: "article", // ✅ Changed from "product" to "article"
+      type: "article", // ✅ Valid OG type
     },
     twitter: {
       card: "summary_large_image",
